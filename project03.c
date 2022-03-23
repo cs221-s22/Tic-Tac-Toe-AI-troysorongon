@@ -39,13 +39,11 @@ bool set_move(tictac_board b, int r, int c, char turn){
 
 //prints board
 void print_board(tictac_board b){
-
 	printf("%c | %c | %c\n", b[0][0], b[0][1], b[0][2]);
 	printf("--+---+--\n");
 	printf("%c | %c | %c\n", b[1][0], b[1][1], b[1][2]);
 	printf("--+---+--\n");
 	printf("%c | %c | %c\n", b[2][0], b[2][1], b[2][2]);
-
 }
 
 //checks for row win
@@ -267,7 +265,6 @@ struct Move getBestMove(tictac_board board){
 
 
 int main(int argc, char* argv[]){
-	
 	if(argc == 1){
 		// initializes an empty board
 		tictac_board board = {{'?', '?', '?'}, {'?', '?', '?'},  {'?', '?', '?'}};	
