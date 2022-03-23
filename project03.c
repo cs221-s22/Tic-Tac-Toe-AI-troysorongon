@@ -16,22 +16,25 @@ void set_board(tictac_board b, char **argv){
 	int n = 0;
 	for(int r = 0; r < 3; r++){
 		for(int c = 0; c < 3; c++){
-			b[r][c] = argv[n++][0];		// sets position on board to the first character of the char*
+			// sets position on board to the first character of the char*
+			b[r][c] = argv[n++][0];		
 		}
 	}
 }
 
 //sets a move on the board
 bool set_move(tictac_board b, int r, int c, char turn){
-	if(!isdigit(r) && !isdigit(c) && (r > 2 || r < 0) && (c > 2 || c < 0)){		// if the inputs are not a number or are out of range, returns false
+	// if the inputs are not a number or are out of range, returns false
+	if(!isdigit(r) && !isdigit(c) && (r > 2 || r < 0) && (c > 2 || c < 0)){		
 		return false;
 	}
-	if(b[r][c] == '?'){		// if space is empty, the spot is filled with char
+	// if space is empty, the spot is filled with char
+	if(b[r][c] == '?'){		
 		b[r][c] = turn;
 		return true;
 	}
-
-	return false;	// returns false if spot is already played
+	// returns false if spot is already played
+	return false;	
 }
 
 //prints board
@@ -107,32 +110,35 @@ bool check_win(tictac_board b, char turn){
 	if(check_diag2_win(b, turn)){
 		return true;
 	}
-
-	return false;	// returns false is there is no winning scenario found on board
+	// returns false is there is no winning scenario found on board
+	return false;	
 }
 
 //cheks if there is a draw 
 bool check_draw(tictac_board b){
 	for(int r = 0; r < 3; r++){
 		for(int c = 0; c < 3; c++){
-			if(b[r][c] == '?'){		// empty space means the game is not finished
+			// empty space means the game is not finished
+			if(b[r][c] == '?'){		
 				return false;
 			}
 		}
 	}
-
-	return true;	// if there is not winner, game result is a tie
+	// if there is not winner, game result is a tie
+	return true;	
 }
 
 //gets the value of the maximizer and minimizer
 int getMinMaxVal(tictac_board board){
 	char turn = 'X';
-	if(check_win(board, turn)){		// if X wins, returns 10: maximizer value
+	// if X wins, returns 10: maximizer value
+	if(check_win(board, turn)){		
 		return 10;
 	}
 	else{
 		turn = 'O';
-		if(check_win(board, turn)){		// if O wins, returns -10: minimizer value
+		// if O wins, returns -10: minimizer value
+		if(check_win(board, turn)){		
 			return -10;
 		}
 	}
@@ -143,20 +149,20 @@ int getMinMaxVal(tictac_board board){
 //goes through every available spot available on the board and decides which move is most optimal based on score
 int minimax(tictac_board board, int depth, bool isMaximizer){
 	int score = getMinMaxVal(board);	
-
-	if(score == 10){	// scenario where the Maximizer wins, returns score
+	// scenario where the Maximizer wins, returns score
+	if(score == 10){	
 		return score;
 	}
-
-	if(score == -10){	// scenario where the Minimizer wins, returns score
+	// scenario where the Minimizer wins, returns score
+	if(score == -10){	
 		return score;
 	}
-
-	if(check_draw(board)){	// if there is a draw, returns 0.
+	// if there is a draw, returns 0.
+	if(check_draw(board)){	
 		return 0;
 	}
-
-	if(isMaximizer){	// looks at X move
+	// looks at X move
+	if(isMaximizer){	
 	
 		int bestScore = -1000;	
 
@@ -164,11 +170,15 @@ int minimax(tictac_board board, int depth, bool isMaximizer){
 		for(int r = 0; r < 3; r++){		
 			for(int c = 0; c < 3; c++){
 				if(board[r][c] == '?'){
-					board[r][c] = 'X';	// places X if spot on board is empty so it can be evaluated
-					int score = minimax(board, depth + 1, false);	// calls minimax to find the final score of that move. See's how many moves it would take for game to finish
-					board[r][c] = '?';	// after score is calculated, position on board is reset to an empty spot 
+					// places X if spot on board is empty so it can be evaluated
+					board[r][c] = 'X';	
+					// calls minimax to find the final score of that move. See's how many moves it would take for game to finish
+					int score = minimax(board, depth + 1, false);	
+					// after score is calculated, position on board is reset to an empty spot 
+					board[r][c] = '?';	
 					if(score > bestScore){	
-						bestScore = score;	// bestScore is the largest score found from all the possible moves
+						// bestScore is the largest score found from all the possible moves
+						bestScore = score;	
 					}
 				}
 			}
@@ -177,7 +187,8 @@ int minimax(tictac_board board, int depth, bool isMaximizer){
 		return bestScore; 
 		
 	}
-	else{	// looks at O move
+	// looks at O move
+	else{	
 
 		int bestScore = 1000;
 
@@ -185,11 +196,15 @@ int minimax(tictac_board board, int depth, bool isMaximizer){
 		for(int r = 0; r < 3; r++){
 			for(int c = 0; c < 3; c++){
 				if(board[r][c] == '?'){
-					board[r][c] = 'O';	// places O if spot on board is empty so it can be evaluated
-					int score = minimax(board, depth + 1, true);		// calls minimax to find the final score of that move. See's how many moves it would take for game to finish
-					board[r][c] = '?';	// after score is calculated, position on board is reset to an empty spot 
+					// places O if spot on board is empty so it can be evaluated
+					board[r][c] = 'O';	
+					// calls minimax to find the final score of that move. See's how many moves it would take for game to finish
+					int score = minimax(board, depth + 1, true);		
+					// after score is calculated, position on board is reset to an empty spot 
+					board[r][c] = '?';	
 					if(score < bestScore){
-						bestScore = score;	// bestScore is the smallest score found from all the possible moves
+						// bestScore is the smallest score found from all the possible moves
+						bestScore = score;	
 					}
 				}
 			}
@@ -203,9 +218,12 @@ int minimax(tictac_board board, int depth, bool isMaximizer){
 // calculates the best move for player or computer 
 struct Move getBestMove(tictac_board board){
 	int bestScore = 10000;
-	struct Move bestMove;	// creates a new struct to store row and column values
-	bestMove.row = -1;	// assigned -1 because it is not a possible move on the board
-	bestMove.col = -1;	// ^^
+	// creates a new struct to store row and column values
+	struct Move bestMove;	
+	// assigned -1 because it is not a possible move on the board
+	bestMove.row = -1;	
+	// ^^
+	bestMove.col = -1;	
 
 	// goes through each available spot on the board and calculates the best move for Minimizer
 	for(int r = 0; r < 3; r++){
@@ -215,9 +233,12 @@ struct Move getBestMove(tictac_board board){
 				int val = minimax(board, 0, true);
 				board[r][c] = '?';
 				if(val < bestScore){	
-					bestMove.row = r;	// assigns the row value based on value calculated from minimax
-					bestMove.col = c;	// assigns the column value based on value calculated from minimax
-					bestScore = val;	// bestScore is the smallest score found from all possible moves
+					// assigns the row value based on value calculated from minimax
+					bestMove.row = r;	
+					// assigns the column value based on value calculated from minimax
+					bestMove.col = c;	
+					// bestScore is the smallest score found from all possible moves
+					bestScore = val;	
 				}
 			}
 		}
@@ -248,73 +269,98 @@ struct Move getBestMove(tictac_board board){
 int main(int argc, char* argv[]){
 	
 	if(argc == 1){
-		tictac_board board = {{'?', '?', '?'}, {'?', '?', '?'},  {'?', '?', '?'}};	// initializes an empty board
-		char turn = 'X';	// first turn is the player: X
+		// initializes an empty board
+		tictac_board board = {{'?', '?', '?'}, {'?', '?', '?'},  {'?', '?', '?'}};	
+		// first turn is the player: X
+		char turn = 'X';	
 		print_board(board);
 		
-		while(1){	// infinie loop until broken by win or draw
+		// infinie loop until broken by win or draw
+		while(1){	
 			int r, c;
 			printf("%c: ", turn);
-			scanf("%d %d", &r, &c);	// receives the move from player
+			// receives the move from player
+			scanf("%d %d", &r, &c);	
 			
-			
-			if(set_move(board, r, c, turn)){	// checks if move is legal
-				if(check_win(board, turn)){		// checks if there is a win
+			// checks if move is legal
+			if(set_move(board, r, c, turn)){
+				// checks if there is a win
+				if(check_win(board, turn)){		
 					print_board(board);
 					printf("%c wins\n", turn);
-					break;	// ends infinite loop
+					// ends infinite loop
+					break;	
 				}
-				else if(check_draw(board)){	// checks if there is a draw
+				// checks if there is a draw
+				else if(check_draw(board)){	
 					print_board(board);
 					printf("draw\n");
-					break;	// ends infinite loop
+					// ends infinite loop
+					break;	
 				}
-
-				if(turn == 'X'){	// swithces turn to computer: O
+				
+				// swithces turn to computer: O
+				if(turn == 'X'){	
 					turn = 'O';
 				}
 
 				if(turn == 'O'){	
-					struct Move theMove;	// creates struct to get row and column
-					theMove = getBestMove(board);	// loops for best move 
+					// creates struct to get row and column
+					struct Move theMove;	
+					// loops for best move 
+					theMove = getBestMove(board);	 
 					int row = theMove.row;	
 					int col = theMove.col;
-					if(set_move(board, row, col, turn)){	// checks if move is legal
-						printf("%c moves to %d %d\n", turn, row, col);	// statement to show where O moved
-						if(check_win(board, turn)){		// checks if there is a win
+					// checks if move is legal
+					if(set_move(board, row, col, turn)){	
+						// statement to show where O moved
+						printf("%c moves to %d %d\n", turn, row, col);	
+						// checks if there is a win
+						if(check_win(board, turn)){		
 							print_board(board);
 							printf("%c wins\n", turn);
-							break;	// breaks infinite loop
+							// breaks infinite loop
+							break;	
 						}
-						else if(check_draw(board)){		// checks if there is a draw
+						// checks if there is a draw
+						else if(check_draw(board)){		
 							print_board(board);
 							printf("draw\n");	
-							break;	// breaks infinite loop
+							// breaks infinite loop
+							break;	
 						}
-
-						print_board(board);	// prints updated board
+						
+						// prints updated board
+						print_board(board);	
 					}
-
-					turn = 'X'; 	// switches turn to player: X
+					
+					// switches turn to player: X
+					turn = 'X'; 	
 				}
 			}
 			else{
-				printf("Illegal Move\n");	// if it not a legal move, prints message and gets a new input from player
+				// if it not a legal move, prints message and gets a new input from player
+				printf("Illegal Move\n");	
 			}	
 		}
 	}
 	
-	if(argc > 2){	// if board is partially filled 
-		tictac_board board;		// creates a new board
-		set_board(board, &argv[1]);		// sets the value from command line to their positions on board
+	// if board is partially filled 
+	if(argc > 2){	
+		// creates a new board
+		tictac_board board;		
+		// sets the value from command line to their positions on board
+		set_board(board, &argv[1]);		
 		print_board(board);
 
-		
-		struct Move theMove;	// creates struct to get row and column
-		theMove = getBestMove(board);	// loops for best move
+		// creates struct to get row and column
+		struct Move theMove;	
+		// loops for best move
+		theMove = getBestMove(board);	
 		int row = theMove.row;		
 		int col = theMove.col;
-		if(set_move(board, row, col, 'O')){		// sets O on the board after best move is calculated 
+		// sets O on the board after best move is calculated 
+		if(set_move(board, row, col, 'O')){		
 			printf("%c: %d %d\n", 'O', row, col);
 		}
 	}
