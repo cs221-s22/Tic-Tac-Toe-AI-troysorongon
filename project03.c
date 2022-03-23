@@ -11,7 +11,7 @@ struct Move{
 	int row, col;	
 };
 
-//sets the board from the commmand line  arguments 
+//sets the board from the commmand line arguments 
 void set_board(tictac_board b, char **argv){
 	int n = 0;
 	for(int r = 0; r < 3; r++){
