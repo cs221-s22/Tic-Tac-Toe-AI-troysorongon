@@ -108,7 +108,7 @@ bool check_win(tictac_board b, char turn){
 		return true;
 	}
 
-	return false;	
+	return false;	// returns false is there is no winning scenario found on board
 }
 
 //cheks if there is a draw 
@@ -161,12 +161,12 @@ int minimax(tictac_board board, int depth, bool isMaximizer){
 		int bestScore = -1000;	
 
 		// goes through each available spot on the board and calculates the best score based on the effectiveness of a move
-		for(int i = 0; i < 3; i++){		
-			for(int j = 0; j < 3; j++){
-				if(board[i][j] == '?'){
-					board[i][j] = 'X';	// places X if spot on board is empty so it can be evaluated
+		for(int r = 0; r < 3; r++){		
+			for(int c = 0; c < 3; c++){
+				if(board[r][c] == '?'){
+					board[r][c] = 'X';	// places X if spot on board is empty so it can be evaluated
 					int score = minimax(board, depth + 1, false);	// calls minimax to find the final score of that move. See's how many moves it would take for game to finish
-					board[i][j] = '?';	// after score is calculated, position on board is reset to an empty spot 
+					board[r][c] = '?';	// after score is calculated, position on board is reset to an empty spot 
 					if(score > bestScore){	
 						bestScore = score;	// bestScore is the largest score found from all the possible moves
 					}
@@ -182,12 +182,12 @@ int minimax(tictac_board board, int depth, bool isMaximizer){
 		int bestScore = 1000;
 
 		// goes through each available spot on the board and calculates the best score based on the effectiveness of a move
-		for(int i = 0; i < 3; i++){
-			for(int j = 0; j < 3; j++){
-				if(board[i][j] == '?'){
-					board[i][j] = 'O';	// places O if spot on board is empty so it can be evaluated
+		for(int r = 0; r < 3; r++){
+			for(int c = 0; c < 3; c++){
+				if(board[r][c] == '?'){
+					board[r][c] = 'O';	// places O if spot on board is empty so it can be evaluated
 					int score = minimax(board, depth + 1, true);		// calls minimax to find the final score of that move. See's how many moves it would take for game to finish
-					board[i][j] = '?';	// after score is calculated, position on board is reset to an empty spot 
+					board[r][c] = '?';	// after score is calculated, position on board is reset to an empty spot 
 					if(score < bestScore){
 						bestScore = score;	// bestScore is the smallest score found from all the possible moves
 					}
@@ -208,31 +208,32 @@ struct Move getBestMove(tictac_board board){
 	bestMove.col = -1;	// ^^
 
 	// goes through each available spot on the board and calculates the best move for Minimizer
-	for(int i = 0; i < 3; i++){
-		for(int n = 0; n < 3; n++){
-			if(board[i][n] == '?'){
-				board[i][n] = 'O';
+	for(int r = 0; r < 3; r++){
+		for(int c = 0; c < 3; c++){
+			if(board[r][c] == '?'){
+				board[r][c] = 'O';
 				int val = minimax(board, 0, true);
-				board[i][n] = '?';
+				board[r][c] = '?';
 				if(val < bestScore){	
-					bestMove.row = i;	// assigns the row value based on value calculated from minimax
-					bestMove.col = n;	// assigns the column value based on value calculated from minimax
+					bestMove.row = r;	// assigns the row value based on value calculated from minimax
+					bestMove.col = c;	// assigns the column value based on value calculated from minimax
 					bestScore = val;	// bestScore is the smallest score found from all possible moves
 				}
 			}
 		}
 	}
 
+	// has to calculate the best move for X after possibilites of O are found
 	if(bestMove.row == -1 && bestMove.col == -1){	// 
-		for(int i = 0; i < 3; i++){
-			for(int n = 0; n < 3; n++){
-				if(board[i][n] == '?'){
-					board[i][n] = 'X';
+		for(int r = 0; r < 3; r++){
+			for(int c = 0; c < 3; c++){
+				if(board[r][c] == '?'){
+					board[r][c] = 'X';
 					int val = minimax(board, 0, false);
-					board[i][n] = '?';
+					board[r][c] = '?';
 					if(val > bestScore){
-						bestMove.row = i;
-						bestMove.col = n;
+						bestMove.row = r;
+						bestMove.col = c;
 						bestScore = val;
 					}
 				}
